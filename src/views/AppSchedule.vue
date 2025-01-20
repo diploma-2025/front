@@ -26,14 +26,17 @@ export default {
     <DatePicker v-model="date" locale="uk"/>
     <v-col class="d-flex flex-column align-center ga-5 overflow-y-scroll">
       <h3>Прийоми</h3>
-      <v-row
+      <v-col
           v-for="(app, index) in appointments"
           :key="index"
-          class="border-md border-accent rounded d-flex align-center justify-space-evenly"
-          style="max-height: 8vh; width: 100%"
+          class="border-md rounded d-flex flex-column
+          align-center justify-space-evenly text-center cursor-pointer
+          "
+          style="max-height: 9vh; width: 100%"
       >
-        {{app.id}}
-      </v-row>
+        <h4>{{ app.patient.username }}</h4>
+        <h5>{{ app.startTime }} - {{ app.endTime }}</h5>
+      </v-col>
     </v-col>
   </v-col>
 </template>

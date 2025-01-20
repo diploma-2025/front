@@ -1,32 +1,16 @@
 <script>
-import {VCalendar} from "vuetify/labs/components"
 import {format} from "date-fns"
 import {uk} from "date-fns/locale"
+import VueCal from 'vue-cal'
+import 'vue-cal/dist/vuecal.css'
 
 export default {
   name: "AppAppointment",
   components: {
-    VCalendar
-  },
-  data() {
-    return {
-      colors: [
-        "#D6E6F2", "#A8D8A1", "#FFE1B3", "#C1A7E6", "#F6D1D1",
-        "#B4C9D7", "#F3F4F7", "#F1E1C6", "#D1F0C1", "#B1D4E3",
-        "#F1B7B7", "#D0D8E8", "#D8F5D6", "#E3C6B3", "#D6E6E1",
-        "#B3D9E8", "#E8E6D3", "#D7D9D1", "#E3E3F4", "#E3D1F5"
-      ]
-    }
+    VueCal
   },
   methods: {
-    getColorForIndex(index) {
-      return this.colors[index % this.colors.length]
-    },
     format,
-    intervalFormat(hour) {
-      const [hours, minutes] = hour.label.split(":")
-      return `${hours}:${minutes}`
-    },
     changeDate(direction) {
       const currentDate = new Date(this.$store.getters.getDate)
       currentDate.setDate(currentDate.getDate() + (direction === 'left' ? -1 : 1))
@@ -37,9 +21,6 @@ export default {
     week() {
       const dayOfWeek = format(new Date(this.date), 'EEEE', {locale: uk})
       return dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1)
-    },
-    uk() {
-      return uk
     },
     date: {
       get() {
@@ -64,8 +45,8 @@ export default {
         return {
           start: startDate,
           end: endDate,
-          title: `Прийом лікаря #${appointment.userId}`,
-          color: this.getColorForIndex(index)
+          title: appointment.patient.username,
+          class: 'leisure'
         };
       })
     }
@@ -91,17 +72,31 @@ export default {
       <h2>{{ format(new Date(date), 'yyyy', {locale: uk}) }}</h2>
     </v-col>
   </v-col>
-  <VCalendar
-      view-mode="day"
-      :hide-header="true"
-      :hide-day-header="true"
-      :interval-duration="30"
-      :interval-format="intervalFormat"
-      :interval-start="15"
-      :intervals="21"
+  <vue-cal
+      locale="uk"
+      :hide-view-selector="true"
+      :hide-title-bar="true"
+      :selected-date="date"
+      :timeFrom="420"
+      :timeTo="1140"
+      :timeCellHeight="60"
+      active-view="day"
+      time-format="HH:mm"
       :events="appointment"
+      :time-step="30"
+      class="rounded"
   />
 </template>
 
-<style scoped>
+<style>
+.vuecal__event {
+  background-color: #A8D8A1 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  cursor: pointer;
+  user-select: none;
+}
 </style>

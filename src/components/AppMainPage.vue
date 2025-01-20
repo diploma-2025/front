@@ -2,7 +2,7 @@
   <AppHeader />
   <v-col class="h-100 d-flex overflow-hidden" fluid>
     <AppSchedule/>
-    <v-col style="height: 80vh; overflow: auto">
+    <v-col style="height: 80vh">
       <AppUsers v-if="activeTab === 1"/>
       <AppAppointment v-if="activeTab === 2"/>
     </v-col>
