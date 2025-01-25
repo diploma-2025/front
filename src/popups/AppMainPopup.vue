@@ -25,7 +25,7 @@
 
 <script>
 import CreateAppointmentPopUp from "@/popups/appointment/CreateAppointmentPopUp.vue";
-import CreateUserPopUp from "@/popups/appointment/CreateUserPopUp.vue";
+import CreateUserPopUp from "@/popups/user/CreateUserPopUp.vue";
 
 export default {
   name: "AppMainPopup",

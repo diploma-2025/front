@@ -2,6 +2,7 @@ import {createStore} from "vuex";
 
 export default createStore({
     state: {
+        roles: [],
         users: [],
         appointments: [],
         date: new Date().toISOString().split('T')[0],
@@ -13,6 +14,7 @@ export default createStore({
         }
     },
     getters: {
+        getRoles: state => state.roles,
         getUsers: state => state.users,
         getPopup: state => state.popUp,
         getAppointments: state => {
@@ -25,6 +27,9 @@ export default createStore({
         getPopUp: state => state.popUp,
     },
     mutations: {
+        setRoles: (state, payload) => {
+            state.roles = payload
+        },
         setUsers: (state, payload) => {
             state.users = payload
         },
@@ -51,6 +56,20 @@ export default createStore({
         },
         clearUser: (state) => {
             state.user = null;
+        },
+        clearStore: (state) => {
+            Object.assign(state, {
+                roles: [],
+                users: [],
+                appointments: [],
+                date: new Date().toISOString().split('T')[0],
+                activeTab: 2,
+                user: null,
+                popUp: {
+                    isOpen: false,
+                    name: null
+                }
+            })
         }
     },
     actions: {
@@ -105,6 +124,44 @@ export default createStore({
                 return res.json()
             }).then(data => {
                 commit('setUsers', data)
+            }).catch(err => {
+                alert(err)
+            })
+        },
+        fetchRoles({state, commit}, {serverUrl}) {
+            const token = sessionStorage.getItem('accessToken')
+            fetch(`${serverUrl}/roles`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => {
+                if (!res.ok) throw new Error(res.statusMessage)
+                return res.json()
+            }).then(data => {
+                commit('setRoles', data)
+            }).catch(err => {
+                alert(err)
+            })
+        },
+        createData({state, commit, dispatch}, {serverUrl, path, body, callBackName}) {
+            fetch(`${serverUrl}/${path}`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            }).then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => {
+                        throw new Error(err.error)
+                    })
+                }
+                return res.json()
+            }).then(() => {
+                dispatch(callBackName, {serverUrl: serverUrl})
             }).catch(err => {
                 alert(err)
             })

@@ -87,38 +87,22 @@ export default {
       this.startTimeError = !this.form.startTime;
       this.endTimeError = this.form.endTime <= this.form.startTime;
 
-      if (!this.dateError && !this.startTimeError && !this.endTimeError) {
-        this.createAppointment();
-      }
-    },
-    createAppointment() {
-      fetch(`${this.$serverUrl}/appointment`, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          date: this.form.date,
-          startTime: this.form.startTime,
-          endTime: this.form.endTime ||
-              `${(parseInt(this.form.startTime.split(":")[0]) + 1) % 24}`.padStart(2, "0") + ":" + this.form.startTime.split(":")[1],
-          patientId: 5
+      if (!this.dateError && !this.startTimeError && !this.endTimeError)
+        this.$store.dispatch('createData', {
+          serverUrl: this.$serverUrl,
+          path: 'appointment',
+          body: {
+            date: this.form.date,
+            startTime: this.form.startTime,
+            endTime: this.form.endTime ||
+                `${(parseInt(this.form.startTime.split(":")[0]) + 1) % 24}`.padStart(2, "0") + ":" + this.form.startTime.split(":")[1],
+            patientId: 5
+          },
+          callBackName: 'fetchAppointments'
+        }).then(() => {
+          this.$emit('closePopup')
         })
-      }).then(res => {
-        if (!res.ok) {
-          return res.json().then(err => {
-            throw new Error(err.error)
-          })
-        }
-        return res.json()
-      }).then(() => {
-        this.$store.dispatch('fetchAppointments', {serverUrl: this.$serverUrl})
-        this.$emit('closePopup')
-      }).catch(err => {
-        alert(err)
-      })
-    }
+    },
   }
 };
 </script>

@@ -60,8 +60,7 @@ export default {
   },
   methods: {
     logOut() {
-      sessionStorage.removeItem('accessToken')
-      this.$store.commit('clearUser')
+      this.$store.commit("clearStore")
       this.$router.push({name: 'Auth'})
     }
   }
