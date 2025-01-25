@@ -14,7 +14,7 @@
                 ref="emailField"
                 :error-messages="email.errors"
                 @input="clearEmailErrors"
-            ></v-text-field>
+            />
             <v-text-field
                 v-model="password.value"
                 label="Пароль"
@@ -25,7 +25,7 @@
                 ref="passwordField"
                 :error-messages="password.errors"
                 @input="clearPasswordErrors"
-            ></v-text-field>
+            />
             <v-btn :disabled="!valid" color="primary" block @click="handleLogin">
               Увійти
             </v-btn>

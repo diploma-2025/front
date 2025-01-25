@@ -7,19 +7,20 @@
           size="large"
           style="margin-left: -28px;"
           elevation="3"
+          @click="this.$store.commit('setPopup', {name: 'CreateAppointmentPopUp', isOpen: true})"
       >
         Записати
       </v-btn>
       <v-col v-if="user?.tabs?.length" cols="5" class="d-flex justify-center ga-5">
         <v-btn v-for="tab in user.tabs" :key="tab.id"
                :class="{ 'v-btn--active': activeTab === tab.id }"
-               @click="setActiveTab(tab.id)"
+               @click="activeTab = tab.id"
         >
           {{ tab.name }}
         </v-btn>
       </v-col>
       <v-col cols="auto">
-        <v-menu v-model="menu" offset-y>
+        <v-menu offset-y>
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
               <span>{{ user?.username }}</span>
@@ -27,10 +28,10 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item @click="handleClick('Налаштування')">
+            <v-list-item @click="handleClick(0)">
               <v-list-item-title>Налаштування</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="handleClick('Вийти')">
+            <v-list-item @click="logOut">
               <v-list-item-title class="text-red">Вийти</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -41,33 +42,29 @@
 </template>
 
 <script>
-import {ref} from 'vue'
-import {useStore} from 'vuex'
 
 export default {
   name: 'AppHeader',
-  setup() {
-    const store = useStore()
-    const menu = ref(false)
-
-    const setActiveTab = (id) => {
-      store.commit('setActiveTab', id)
-    }
-
-    const handleClick = item => console.log(`Вибрано: ${item}`)
-
-    const switchCalendar = value => store.commit('setCalendar', value)
-
-    return {menu, setActiveTab, handleClick, switchCalendar}
-  },
   computed: {
     user() {
       return this.$store.getters.getUser
     },
-    activeTab() {
-      return this.$store.getters.getActiveTab
+    activeTab: {
+      get() {
+        return this.$store.getters.getActiveTab
+      },
+      set(value) {
+        this.$store.commit('setActiveTab', value)
+      }
     }
   },
+  methods: {
+    logOut() {
+      sessionStorage.removeItem('accessToken')
+      this.$store.commit('clearUser')
+      this.$router.push({name: 'Auth'})
+    }
+  }
 }
 </script>
 

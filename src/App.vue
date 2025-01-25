@@ -5,13 +5,17 @@
   <v-app>
     <v-main>
       <router-view/>
+      <AppMainPopup/>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import AppMainPopup from "@/popups/AppMainPopup.vue";
+
 export default {
   name: "App",
+  components: {AppMainPopup},
   data() {
     return {
       cachedAppointments: {},
@@ -28,7 +32,7 @@ export default {
       if (newDate !== oldDate) {
         this.$store.dispatch("fetchAppointments", {serverUrl: this.$serverUrl});
       }
-    }
+    },
   }
 };
 </script>

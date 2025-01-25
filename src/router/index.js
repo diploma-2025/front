@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
-import AppAuthPage from "@/components/AppAuthPage.vue";
-import AppMainPage from "@/components/AppMainPage.vue";
+import AppAuthPage from "@/pages/AppAuthPage.vue";
+import AppMainPage from "@/pages/AppMainPage.vue";
 
 const routes = [
     {
