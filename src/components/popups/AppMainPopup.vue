@@ -2,7 +2,6 @@
   <v-dialog
       v-model="popup.isOpen"
       max-width="400px"
-      @after-leave="clearPopupName"
   >
     <v-card>
       <v-card-title class="d-flex align-center justify-space-between">
@@ -15,6 +14,7 @@
         <component
             :is="popup.name"
             v-if="popup.name"
+            v-bind="popup.extra || {}"
             @updateTitle="updateTitle"
             @closePopup="closePopup"
         />
@@ -24,14 +24,18 @@
 </template>
 
 <script>
-import CreateAppointmentPopUp from "@/popups/appointment/CreateAppointmentPopUp.vue";
-import CreateUserPopUp from "@/popups/user/CreateUserPopUp.vue";
+import CreateAppointmentPopUp from "@/components/popups/appointment/CreateAppointmentPopUp.vue";
+import CreateUserPopUp from "@/components/popups/user/CreateUserPopUp.vue";
+import UpdateUserPopUp from "@/components/popups/user/UpdateUserPopUp.vue";
+import DeleteUserPopUp from "@/components/popups/user/DeleteUserPopUp.vue";
 
 export default {
   name: "AppMainPopup",
   components: {
     CreateAppointmentPopUp,
-    CreateUserPopUp
+    CreateUserPopUp,
+    UpdateUserPopUp,
+    DeleteUserPopUp,
   },
   data() {
     return {
@@ -45,9 +49,6 @@ export default {
   },
   methods: {
     closePopup() {
-      this.$store.commit("setPopup", {isOpen: false, name: this.popup.name})
-    },
-    clearPopupName() {
       this.$store.commit("clearPopup")
     },
     updateTitle(newTitle) {

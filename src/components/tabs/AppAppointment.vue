@@ -54,7 +54,17 @@ export default {
         };
       })
     }
-  }
+  },
+  mounted() {
+    this.$store.dispatch("fetchData", {
+      serverUrl: this.$serverUrl,
+      path: 'appointments',
+      query: {
+        date: this.$store.getters.getDate,
+      },
+      action: 'setAppointments'
+    })
+  },
 }
 </script>
 

@@ -1,26 +1,29 @@
 import {createStore} from "vuex";
 
-export default createStore({
-    state: {
-        roles: [],
-        users: [],
-        appointments: [],
-        date: new Date().toISOString().split('T')[0],
-        activeTab: 2,
-        user: null,
-        popUp: {
-            isOpen: false,
-            name: null
-        }
+const getDefaultState = () => ({
+    roles: [],
+    users: [],
+    appointments: [],
+    date: new Date().toISOString().split('T')[0],
+    activeTab: {
+        id: 2,
+        canEdit: false
     },
+    user: null,
+    popUp: {
+        isOpen: false,
+        name: null,
+        extra: {}
+    }
+})
+
+export default createStore({
+    state: getDefaultState(),
     getters: {
         getRoles: state => state.roles,
         getUsers: state => state.users,
         getPopup: state => state.popUp,
-        getAppointments: state => {
-            console.log(state.appointments)
-            return state.appointments
-        },
+        getAppointments: state => state.appointments,
         getDate: state => state.date,
         getActiveTab: state => state.activeTab,
         getUser: state => state.user,
@@ -49,103 +52,38 @@ export default createStore({
             state.user = user;
         },
         clearPopup: (state) => {
-            state.popUp = {
-                isOpen: false,
-                name: null
-            };
+            state.popUp.isOpen = false;
+            setTimeout(() => {
+                state.popUp.name = null
+                state.popUp.extra = {}
+            }, 300);
         },
         clearUser: (state) => {
             state.user = null;
         },
-        clearStore: (state) => {
-            Object.assign(state, {
-                roles: [],
-                users: [],
-                appointments: [],
-                date: new Date().toISOString().split('T')[0],
-                activeTab: 2,
-                user: null,
-                popUp: {
-                    isOpen: false,
-                    name: null
-                }
-            })
+        clearStore(state) {
+            Object.assign(state, getDefaultState());
         }
     },
     actions: {
-        fetchUser({commit}, {serverUrl, router}) {
-            const token = sessionStorage.getItem('accessToken')
-            fetch(`${serverUrl}/user`, {
+        fetchData({state, commit}, {serverUrl, path, action, query = null, router = null}) {
+            fetch(`${serverUrl}/${path}?${query ? new URLSearchParams(query) : ''}`, {
                 method: "GET",
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`,
                     'Content-Type': 'application/json'
                 }
             }).then(res => {
-                if (!res.ok) throw new Error("Потрібно повторно авторизуватись")
+                if (!res.ok) throw new Error(res.statusText)
                 return res.json()
             }).then(data => {
-                commit('setUser', data)
+                commit(action, data)
             }).catch(err => {
-                router?.push({name: 'Auth'})
+                router ? router.push({name: 'Auth'}) : null
                 alert(err)
             })
         },
-        fetchAppointments({state, commit}, {serverUrl}) {
-            const token = sessionStorage.getItem('accessToken')
-            const query = new URLSearchParams({
-                date: state.date
-            })
-            fetch(`${serverUrl}/appointment?${query}`, {
-                method: "GET",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            }).then(res => {
-                if (!res.ok) throw new Error(res.statusMessage)
-                return res.json()
-            }).then(data => {
-                commit('setAppointments', data)
-            }).catch(err => {
-                alert(err)
-            })
-        },
-        fetchUsers({state, commit}, {serverUrl}) {
-            const token = sessionStorage.getItem('accessToken')
-            fetch(`${serverUrl}/user/users`, {
-                method: "GET",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            }).then(res => {
-                if (!res.ok) throw new Error(res.statusMessage)
-                return res.json()
-            }).then(data => {
-                commit('setUsers', data)
-            }).catch(err => {
-                alert(err)
-            })
-        },
-        fetchRoles({state, commit}, {serverUrl}) {
-            const token = sessionStorage.getItem('accessToken')
-            fetch(`${serverUrl}/roles`, {
-                method: "GET",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            }).then(res => {
-                if (!res.ok) throw new Error(res.statusMessage)
-                return res.json()
-            }).then(data => {
-                commit('setRoles', data)
-            }).catch(err => {
-                alert(err)
-            })
-        },
-        createData({state, commit, dispatch}, {serverUrl, path, body, callBackName}) {
+        createData({state, commit, dispatch}, {serverUrl, path, body, query, action}) {
             fetch(`${serverUrl}/${path}`, {
                 method: "POST",
                 headers: {
@@ -161,10 +99,43 @@ export default createStore({
                 }
                 return res.json()
             }).then(() => {
-                dispatch(callBackName, {serverUrl: serverUrl})
+                dispatch('fetchData', {serverUrl: serverUrl, path: path, query: query, action: action})
+                commit('clearPopup')
             }).catch(err => {
                 alert(err)
             })
+        },
+        updateData({state, commit, dispatch}, {serverUrl, path, body, action}) {
+            fetch(`${serverUrl}/${path}`, {
+                method: "PATCH",
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            }).then(res => {
+                if (!res.ok) throw new Error(res.statusMessage)
+                return res.json()
+            }).then(() => {
+                dispatch('fetchData', {serverUrl: serverUrl, path: path, action: action})
+                commit('clearPopup')
+            }).catch(err => alert(err))
+        },
+        deleteData({state, commit, dispatch}, {serverUrl, path, body, action}) {
+            fetch(`${serverUrl}/${path}`, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            }).then(res => {
+                if (!res.ok) throw new Error(res.statusMessage)
+                return res.json()
+            }).then(() => {
+                dispatch('fetchData', {serverUrl: serverUrl, path: path, action: action})
+                commit('clearPopup')
+            }).catch(err => alert(err))
         }
     },
     modules: {},

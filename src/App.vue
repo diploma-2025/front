@@ -4,6 +4,13 @@
 <template>
   <v-app>
     <v-main>
+      <v-progress-circular
+          v-if="loading"
+          indeterminate
+          color="primary"
+          size="64"
+          class="ma-auto"
+      ></v-progress-circular>
       <router-view/>
       <AppMainPopup/>
     </v-main>
@@ -11,28 +18,34 @@
 </template>
 
 <script>
-import AppMainPopup from "@/popups/AppMainPopup.vue";
+import AppMainPopup from "@/components/popups/AppMainPopup.vue";
 
 export default {
   name: "App",
   components: {AppMainPopup},
-  data() {
-    return {
-      cachedAppointments: {},
-    }
-  },
   watch: {
     '$route': function (to, from) {
       if (to.name !== 'Auth') {
-        this.$store.dispatch("fetchUser", {serverUrl: this.$serverUrl, router: this.$router})
-        this.$store.dispatch("fetchAppointments", {serverUrl: this.$serverUrl})
+        this.$store.dispatch("fetchData", {
+          serverUrl: this.$serverUrl,
+          router: this.$router,
+          path: 'users/user',
+          action: 'setUser',
+        })
       }
     },
     '$store.state.date': function (newDate, oldDate) {
       if (newDate !== oldDate) {
-        this.$store.dispatch("fetchAppointments", {serverUrl: this.$serverUrl});
+        this.$store.dispatch("fetchData", {
+          serverUrl: this.$serverUrl,
+          path: 'appointments',
+          query: {
+            date: newDate,
+          },
+          action: 'setAppointments'
+        })
       }
-    },
+    }
   }
 };
 </script>

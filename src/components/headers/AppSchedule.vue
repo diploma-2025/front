@@ -11,7 +11,6 @@ export default {
         return this.$store.getters.getDate;
       },
       set(newDate) {
-        // Встановлюємо нову дату в стор
         this.$store.commit('setDate', newDate);
       }
     },

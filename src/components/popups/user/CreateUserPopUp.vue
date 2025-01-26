@@ -21,35 +21,31 @@ export default {
       this.errors.emailErrors = !this.form.email
       this.errors.usernameErrors = !this.form.username
           || !/^[А-ЯІЇЄ][а-яіїє']+\s[А-ЯІЇЄ][а-яіїє']+\s[А-ЯІЇЄ][а-яіїє']+$/u.test(this.form.username)
-      this.errors.roleErrors = !this.form.roleErrors
+      this.errors.roleErrors = !this.form.role
 
-      console.log("aasdasdas")
       if (!this.errors.emailErrors && !this.errors.usernameErrors && !this.errors.roleErrors)
-        console.log("bbbbb")
         this.$store.dispatch('createData', {
           serverUrl: this.$serverUrl,
-          path: 'user',
+          path: 'users',
           body: {
             email: this.form.email,
             username: this.form.username,
             roleId: this.form.role,
           },
-          callBackName: 'fetchUsers',
-        }).then(() => {
-          this.$emit('closePopup')
+          action: 'setUsers'
         })
     },
   },
   computed: {
     roles: {
       get() {
-        return  this.$store.getters.getRoles
+        return this.$store.getters.getRoles
       }
     }
   },
   mounted() {
     this.$emit("updateTitle", this.title)
-    this.$store.dispatch('fetchRoles', {serverUrl: this.$serverUrl})
+    this.$store.dispatch('fetchData', {serverUrl: this.$serverUrl, path: 'roles', action: 'setRoles'})
   },
 }
 
@@ -80,8 +76,10 @@ export default {
         variant="outlined"
         label="Роль"
         class="w-75"
-        v-model="form.role"/>
-    <v-btn type="submit" color="primary" class="mt-4 w-25">
+        v-model="form.role"
+        :error-messages="errors.roleErrors ? ['Вкажіть роль'] : []"
+    />
+    <v-btn type="submit" color="primary" class="mt-4 w-50">
       Зберегти
     </v-btn>
   </v-form>

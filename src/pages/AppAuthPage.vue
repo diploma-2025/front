@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     handleLogin() {
-      fetch(`${this.$serverUrl}/user/authorization`, {
+      fetch(`${this.$serverUrl}/users/authorization`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'

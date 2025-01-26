@@ -13,8 +13,8 @@
       </v-btn>
       <v-col v-if="user?.tabs?.length" cols="5" class="d-flex justify-center ga-5">
         <v-btn v-for="tab in user.tabs" :key="tab.id"
-               :class="{ 'v-btn--active': activeTab === tab.id }"
-               @click="activeTab = tab.id"
+               :class="{ 'v-btn--active': activeTab.id === tab.id }"
+               @click="activeTab = tab"
         >
           {{ tab.name }}
         </v-btn>

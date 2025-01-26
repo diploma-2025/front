@@ -30,7 +30,7 @@
         :error="endTimeError"
         :min="form.startTime"
     />
-    <v-btn type="submit" color="primary" class="mt-4 w-25">
+    <v-btn type="submit" color="primary" class="mt-4 w-50">
       Зберегти
     </v-btn>
   </v-form>
@@ -90,7 +90,7 @@ export default {
       if (!this.dateError && !this.startTimeError && !this.endTimeError)
         this.$store.dispatch('createData', {
           serverUrl: this.$serverUrl,
-          path: 'appointment',
+          path: 'appointments',
           body: {
             date: this.form.date,
             startTime: this.form.startTime,
@@ -98,9 +98,10 @@ export default {
                 `${(parseInt(this.form.startTime.split(":")[0]) + 1) % 24}`.padStart(2, "0") + ":" + this.form.startTime.split(":")[1],
             patientId: 5
           },
-          callBackName: 'fetchAppointments'
-        }).then(() => {
-          this.$emit('closePopup')
+          query: {
+            date: this.$store.getters.getDate
+          },
+          action: 'setAppointments',
         })
     },
   }
