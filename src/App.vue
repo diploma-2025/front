@@ -9,8 +9,8 @@
           indeterminate
           color="primary"
           size="64"
-          class="ma-auto"
-      ></v-progress-circular>
+          class="ma-auto">
+      </v-progress-circular>
       <router-view/>
       <AppMainPopup/>
     </v-main>

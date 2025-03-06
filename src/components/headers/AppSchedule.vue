@@ -45,7 +45,7 @@ export default {
           :key="index"
           class="border-md rounded d-flex flex-column
           align-center justify-space-evenly text-center cursor-pointer"
-          style="max-height: 9vh; width: 100%"
+          style="max-height: max-content; width: 100%"
       >
         <h4>{{ app.patient.username }}</h4>
         <h5>{{ app.startTime }} - {{ app.endTime }}</h5>

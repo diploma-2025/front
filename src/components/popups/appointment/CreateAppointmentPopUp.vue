@@ -1,7 +1,7 @@
 <template>
   <v-form @submit.prevent="submitForm" ref="form" class="d-flex flex-column ga-5 align-center">
     <v-text-field
-        class="w-75"
+        class="w-50"
         label="Дата"
         variant="outlined"
         v-model="form.date"
@@ -11,7 +11,7 @@
         :error-messages="dateError ? ['Виберіть дату'] : []"
     />
     <v-select
-        class="w-75"
+        class="w-50"
         label="Час початку"
         variant="outlined"
         :items="filteredStartTimes"
@@ -21,7 +21,7 @@
         :min="minTime"
     />
     <v-select
-        class="w-75"
+        class="w-50"
         label="Час завершення*"
         variant="outlined"
         v-model="form.endTime"
@@ -30,6 +30,22 @@
         :error="endTimeError"
         :min="form.startTime"
     />
+    <div class="w-100 d-flex ps-12 ga-10">
+      <v-autocomplete
+          class="ms-10"
+          label="Пацієнт"
+          variant="outlined"
+          :items="patients"
+          item-title="username"
+          item-value="id"
+          v-model="form.patient"
+          :error-messages="patientError ? ['Виберіть пацієнта,або створіть нового'] : []"
+          :error="patientError"
+      />
+      <v-btn color="primary" icon @click="createNewPatient">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </div>
     <v-btn type="submit" color="primary" class="mt-4 w-50">
       Зберегти
     </v-btn>
@@ -48,7 +64,8 @@ export default {
       form: {
         date: new Date().toISOString().split("T")[0],
         startTime: null,
-        endTime: null
+        endTime: null,
+        patient: null
       },
       timeOptions: [
         "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -59,7 +76,8 @@ export default {
       minTime: new Date().toLocaleTimeString('uk-UK').slice(0, 5),
       dateError: false,
       startTimeError: false,
-      endTimeError: false
+      endTimeError: false,
+      patientError: false,
     };
   },
   computed: {
@@ -79,15 +97,21 @@ export default {
         return this.timeOptions.slice(startIndex + 1);
       }
       return this.timeOptions;
+    },
+    patients: {
+      get() {
+        return this.$store.getters.getPatients
+      }
     }
   },
   methods: {
     submitForm() {
       this.dateError = !this.form.date;
       this.startTimeError = !this.form.startTime;
-      this.endTimeError = this.form.endTime <= this.form.startTime;
+      this.endTimeError = this.form.startTime !== null ? this.form.endTime <= this.form.startTime : false;
+      this.patientError = !this.form.patient;
 
-      if (!this.dateError && !this.startTimeError && !this.endTimeError)
+      if (!this.dateError && !this.startTimeError && !this.endTimeError && !this.patientError)
         this.$store.dispatch('createData', {
           serverUrl: this.$serverUrl,
           path: 'appointments',
@@ -96,7 +120,7 @@ export default {
             startTime: this.form.startTime,
             endTime: this.form.endTime ||
                 `${(parseInt(this.form.startTime.split(":")[0]) + 1) % 24}`.padStart(2, "0") + ":" + this.form.startTime.split(":")[1],
-            patientId: 5
+            patientId: this.form.patient,
           },
           query: {
             date: this.$store.getters.getDate

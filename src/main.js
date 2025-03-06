@@ -9,7 +9,7 @@ loadFonts();
 
 const app = createApp(App);
 
-app.config.globalProperties.$serverUrl = "http://192.168.0.104:8000";
+app.config.globalProperties.$serverUrl = "http://localhost:8000";
 
 app
     .use(router)

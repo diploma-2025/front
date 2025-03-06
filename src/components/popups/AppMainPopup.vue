@@ -26,16 +26,22 @@
 <script>
 import CreateAppointmentPopUp from "@/components/popups/appointment/CreateAppointmentPopUp.vue";
 import CreateUserPopUp from "@/components/popups/user/CreateUserPopUp.vue";
+import CreatePatientPopUp from "@/components/popups/patients/CreatePatientPopUp.vue";
 import UpdateUserPopUp from "@/components/popups/user/UpdateUserPopUp.vue";
+import UpdatePatientPopUp from "@/components/popups/patients/UpdatePatientPopUp.vue";
 import DeleteUserPopUp from "@/components/popups/user/DeleteUserPopUp.vue";
+import DeletePatientPopUp from "@/components/popups/patients/DeletePatientPopUp.vue";
 
 export default {
   name: "AppMainPopup",
   components: {
     CreateAppointmentPopUp,
     CreateUserPopUp,
+    CreatePatientPopUp,
     UpdateUserPopUp,
+    UpdatePatientPopUp,
     DeleteUserPopUp,
+    DeletePatientPopUp
   },
   data() {
     return {

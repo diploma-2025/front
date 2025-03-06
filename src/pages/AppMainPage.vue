@@ -5,6 +5,7 @@
     <v-col class="border-md overflow-hidden mt-3 pa-0 rounded">
       <AppUsers v-if="activeTab.id === 1"/>
       <AppAppointment v-if="activeTab.id === 2"/>
+      <AppPatients v-if="activeTab.id === 3"/>
     </v-col>
   </v-col>
 </template>
@@ -14,15 +15,23 @@ import AppHeader from "@/components/headers/AppHeader.vue"
 import AppSchedule from "@/components/headers/AppSchedule.vue";
 import AppUsers from "@/components/tabs/AppUsers.vue";
 import AppAppointment from "@/components/tabs/AppAppointment.vue";
+import AppPatients from "@/components/tabs/AppPatients.vue";
 
 export default {
   name: "AppMainPage",
-  components: {AppHeader, AppSchedule, AppUsers, AppAppointment},
+  components: {AppHeader, AppSchedule, AppUsers, AppAppointment, AppPatients},
   computed: {
     activeTab() {
       return this.$store.getters.getActiveTab
     },
   },
+  mounted() {
+    this.$store.dispatch("fetchData", {
+      serverUrl: this.$serverUrl,
+      path: 'patients',
+      action: 'setPatients',
+    })
+  }
 }
 </script>
 

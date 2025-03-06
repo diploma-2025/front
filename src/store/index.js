@@ -4,6 +4,7 @@ const getDefaultState = () => ({
     roles: [],
     users: [],
     appointments: [],
+    patients: [],
     date: new Date().toISOString().split('T')[0],
     activeTab: {
         id: 2,
@@ -28,6 +29,7 @@ export default createStore({
         getActiveTab: state => state.activeTab,
         getUser: state => state.user,
         getPopUp: state => state.popUp,
+        getPatients: state => state.patients,
     },
     mutations: {
         setRoles: (state, payload) => {
@@ -50,6 +52,9 @@ export default createStore({
         },
         setUser: (state, user) => {
             state.user = user;
+        },
+        setPatients: (state, patients) => {
+            state.patients = patients;
         },
         clearPopup: (state) => {
             state.popUp.isOpen = false;

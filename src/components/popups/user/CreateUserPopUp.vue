@@ -1,4 +1,6 @@
 <script>
+import {fullNameValidator} from "@/utils/format";
+
 export default {
   name: "CreateUserPopUp",
   data() {
@@ -20,7 +22,7 @@ export default {
     submitForm() {
       this.errors.emailErrors = !this.form.email
       this.errors.usernameErrors = !this.form.username
-          || !/^[А-ЯІЇЄ][а-яіїє']+\s[А-ЯІЇЄ][а-яіїє']+\s[А-ЯІЇЄ][а-яіїє']+$/u.test(this.form.username)
+          || fullNameValidator(this.form.username)
       this.errors.roleErrors = !this.form.role
 
       if (!this.errors.emailErrors && !this.errors.usernameErrors && !this.errors.roleErrors)

@@ -30,11 +30,6 @@ export default {
       })
     }
   },
-  methods: {
-    test(id) {
-      console.log(id);
-    },
-  },
 };
 </script>
 
@@ -72,7 +67,7 @@ export default {
                @click="this.$store.commit('setPopup', {
                  isOpen: true,
                  name: editButton,
-                 extra: {id: item.id, username: item.username, role: item.role},
+                 extra: {id: item.id, username: item.username, role: item.role, phone: item.phone}
                })">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
