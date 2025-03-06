@@ -8,7 +8,7 @@ export default {
   computed: {
     date: {
       get() {
-        return this.$store.getters.getDate;
+        return this.$store.getters.getScheduleDate;
       },
       set(newDate) {
         this.$store.commit('setDate', newDate);
@@ -24,14 +24,6 @@ export default {
       lastMonth: null,
     };
   },
-  watch: {
-    date(newDate) {
-      const currentMonth = new Date(newDate).getMonth();
-      const currentYear = new Date(newDate).getFullYear();
-      this.dateKey++;
-      this.lastMonth = {month: currentMonth, year: currentYear};
-    }
-  }
 }
 </script>
 

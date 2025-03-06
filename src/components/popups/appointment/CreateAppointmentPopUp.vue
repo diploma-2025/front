@@ -1,7 +1,7 @@
 <template>
   <v-form @submit.prevent="submitForm" ref="form" class="d-flex flex-column ga-5 align-center">
     <v-text-field
-        class="w-50"
+        class="w-75"
         label="Дата"
         variant="outlined"
         v-model="form.date"
@@ -11,7 +11,7 @@
         :error-messages="dateError ? ['Виберіть дату'] : []"
     />
     <v-select
-        class="w-50"
+        class="w-75"
         label="Час початку"
         variant="outlined"
         :items="filteredStartTimes"
@@ -21,7 +21,7 @@
         :min="minTime"
     />
     <v-select
-        class="w-50"
+        class="w-75"
         label="Час завершення*"
         variant="outlined"
         v-model="form.endTime"
@@ -30,22 +30,17 @@
         :error="endTimeError"
         :min="form.startTime"
     />
-    <div class="w-100 d-flex ps-12 ga-10">
-      <v-autocomplete
-          class="ms-10"
-          label="Пацієнт"
-          variant="outlined"
-          :items="patients"
-          item-title="username"
-          item-value="id"
-          v-model="form.patient"
-          :error-messages="patientError ? ['Виберіть пацієнта,або створіть нового'] : []"
-          :error="patientError"
-      />
-      <v-btn color="primary" icon @click="createNewPatient">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </div>
+    <v-autocomplete
+        class="w-75"
+        label="Пацієнт"
+        variant="outlined"
+        :items="patients"
+        item-title="username"
+        item-value="id"
+        v-model="form.patient"
+        :error-messages="patientError ? ['Виберіть пацієнта,або створіть нового'] : []"
+        :error="patientError"
+    />
     <v-btn type="submit" color="primary" class="mt-4 w-50">
       Зберегти
     </v-btn>
@@ -123,7 +118,7 @@ export default {
             patientId: this.form.patient,
           },
           query: {
-            date: this.$store.getters.getDate
+            date: this.$store.getters.getScheduleDate
           },
           action: 'setAppointments',
         })

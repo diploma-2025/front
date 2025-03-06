@@ -25,7 +25,7 @@ export default createStore({
         getUsers: state => state.users,
         getPopup: state => state.popUp,
         getAppointments: state => state.appointments,
-        getDate: state => state.date,
+        getScheduleDate: state => state.date,
         getActiveTab: state => state.activeTab,
         getUser: state => state.user,
         getPopUp: state => state.popUp,
@@ -54,7 +54,12 @@ export default createStore({
             state.user = user;
         },
         setPatients: (state, patients) => {
-            state.patients = patients;
+            console.log(patients)
+            patients = patients?.map(patient => ({
+                ...patient,
+                formatedPhone: patient.phone.join(", ")
+            }))
+            state.patients = patients
         },
         clearPopup: (state) => {
             state.popUp.isOpen = false;

@@ -28,7 +28,7 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item @click="handleClick(0)">
+            <v-list-item @click="() => {}">
               <v-list-item-title>Налаштування</v-list-item-title>
             </v-list-item>
             <v-list-item @click="logOut">

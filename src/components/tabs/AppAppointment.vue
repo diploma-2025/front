@@ -12,7 +12,7 @@ export default {
   methods: {
     format,
     changeDate(direction) {
-      const currentDate = new Date(this.$store.getters.getDate)
+      const currentDate = new Date(this.$store.getters.getScheduleDate)
       currentDate.setDate(currentDate.getDate() + (direction === 'left' ? -1 : 1))
       this.$store.commit('setDate', currentDate)
     }
@@ -27,7 +27,7 @@ export default {
     },
     date: {
       get() {
-        return this.$store.getters.getDate
+        return this.$store.getters.getScheduleDate
       }
     },
     appointment() {
@@ -60,7 +60,7 @@ export default {
       serverUrl: this.$serverUrl,
       path: 'appointments',
       query: {
-        date: this.$store.getters.getDate,
+        date: this.$store.getters.getScheduleDate,
       },
       action: 'setAppointments'
     })
