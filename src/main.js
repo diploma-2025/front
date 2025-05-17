@@ -9,7 +9,7 @@ loadFonts();
 
 const app = createApp(App);
 
-app.config.globalProperties.$serverUrl = "http://localhost:8000";
+app.config.globalProperties.$serverUrl = `http://${process.env.VUE_APP_SERVER_HOST}:${process.env.VUE_APP_SERVER_PORT}`;
 
 app
     .use(router)
