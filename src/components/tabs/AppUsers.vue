@@ -16,6 +16,9 @@ export default {
         ...(this.canEdit ? [{title: "Дії", key: "actions", align: "center", sortable: false}] : []),
       ];
     },
+    user() {
+      return this.$store.getters.getUser;
+    },
     users: {
       get() {
         return this.$store.getters.getUsers;
@@ -30,7 +33,7 @@ export default {
   mounted() {
     this.$store.dispatch("fetchData", {
       serverUrl: this.$serverUrl,
-      path: 'users',
+      path: this.user.role === 1 ? 'users' : "users/nurse",
       action: 'setUsers',
     })
   },

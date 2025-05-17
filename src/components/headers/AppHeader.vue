@@ -2,6 +2,7 @@
   <v-app-bar app elevation="0">
     <v-row class="d-flex align-center justify-space-around" no-gutters>
       <v-btn
+          v-if="user?.role !== 1"
           color="black"
           class="font-weight-bold"
           size="large"
@@ -46,8 +47,10 @@
 export default {
   name: 'AppHeader',
   computed: {
-    user() {
-      return this.$store.getters.getUser
+    user: {
+      get() {
+        return this.$store.getters.getUser
+      }
     },
     activeTab: {
       get() {
@@ -60,6 +63,7 @@ export default {
   },
   methods: {
     logOut() {
+      sessionStorage.removeItem('accessToken')
       this.$store.commit("clearStore")
       this.$router.push({name: 'Auth'})
     }

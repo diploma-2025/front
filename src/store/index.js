@@ -5,9 +5,11 @@ const getDefaultState = () => ({
     users: [],
     appointments: [],
     patients: [],
+    patientId: null,
+    patient: {},
     date: new Date().toISOString().split('T')[0],
     activeTab: {
-        id: 2,
+        id: 0,
         canEdit: false
     },
     user: null,
@@ -30,6 +32,8 @@ export default createStore({
         getUser: state => state.user,
         getPopUp: state => state.popUp,
         getPatients: state => state.patients,
+        getPatientId: state => state.patientId,
+        getPatient: state => state.patient,
     },
     mutations: {
         setRoles: (state, payload) => {
@@ -54,12 +58,17 @@ export default createStore({
             state.user = user;
         },
         setPatients: (state, patients) => {
-            console.log(patients)
             patients = patients?.map(patient => ({
                 ...patient,
                 formatedPhone: patient.phone.join(", ")
             }))
             state.patients = patients
+        },
+        setPatientId: (state, patientId) => {
+            state.patientId = patientId;
+        },
+        setPatient: (state, patient) => {
+            state.patient = patient;
         },
         clearPopup: (state) => {
             state.popUp.isOpen = false;
@@ -70,6 +79,10 @@ export default createStore({
         },
         clearUser: (state) => {
             state.user = null;
+        },
+        clearPatient: (state) => {
+            state.patient = {};
+            state.patientId = null;
         },
         clearStore(state) {
             Object.assign(state, getDefaultState());

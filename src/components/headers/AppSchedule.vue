@@ -29,7 +29,7 @@ export default {
 
 <template>
   <v-col cols="2" class="bg-white d-flex flex-column align-center ga-5">
-    <DatePicker v-model="date" locale="uk" :is-required="true" :key="dateKey"/>
+    <DatePicker v-model="date" locale="uk" :is-required="true" :key="dateKey" style="width: 100%; max-width: 300px;"/>
     <v-col v-if="appointments.length" class="d-flex flex-column align-center ga-5 overflow-y-scroll">
       <h3>Прийоми</h3>
       <v-col

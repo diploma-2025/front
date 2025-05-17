@@ -109,9 +109,7 @@ export default {
 
 <style scoped>
 .auth-container {
-  background-image: url("https://picsum.photos/id/353/1920/1080");
-  background-position: center;
-  background-size: cover;
+  background: lightskyblue;
 }
 
 .auth-card {

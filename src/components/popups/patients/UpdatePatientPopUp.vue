@@ -68,15 +68,15 @@ export default {
 
 <template>
   <v-form class="d-flex flex-column align-center ga-5" @submit.prevent="submitForm">
-    <v-text-field
-        v-model="form.username"
-        label="ПІБ"
-        variant="outlined"
-        type="text"
-        class="w-75"
-        :error-messages="errors.usernameErrors ? ['Вкажіть коректно ПІБ']: []"
-        :error="errors.usernameErrors"
-    />
+      <v-text-field
+          v-model="form.username"
+          label="ПІБ"
+          variant="outlined"
+          type="text"
+          class="w-75"
+          :error-messages="errors.usernameErrors ? ['Вкажіть коректно ПІБ']: []"
+          :error="errors.usernameErrors"
+      />
     <v-select
         v-model="form.phone"
         :items="form.phone"

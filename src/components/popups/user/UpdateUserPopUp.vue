@@ -1,11 +1,19 @@
 <script>
+import {fullNameValidator} from "@/utils/format";
+
 export default {
   name: "UpdateUserPopUp",
   data() {
     return {
-      title: "Редагування ролі",
+      title: "Редагування користувача",
       localRole: this.role,
-      initialRole: this.role
+      initialRole: this.role,
+      form: {
+        username: this.username,
+      },
+      errors: {
+        usernameErrors: false
+      }
     }
   },
   props: {
@@ -22,13 +30,27 @@ export default {
       required: true
     }
   },
+  methods: {
+    submitForm() {
+      this.errors.usernameErrors = !this.form.username || fullNameValidator(this.form.username);
+      if (!this.errors.usernameErrors) {
+        this.$store.dispatch('updateData', {
+          serverUrl: this.$serverUrl,
+          path: 'users',
+          body: {
+            userId: this.id,
+            username: this.form.username,
+            role: this.localRole
+          },
+          action: 'setUsers'
+        })
+      }
+    }
+  },
   computed: {
     roles() {
       return this.$store.getters.getRoles;
     },
-    isRoleChanged() {
-      return this.localRole !== this.initialRole;
-    }
   },
   mounted() {
     this.$emit("updateTitle", this.title)
@@ -43,8 +65,16 @@ export default {
 </script>
 
 <template>
-  <v-col class="text-center d-flex flex-column align-center ga-5">
-    <h3 class="text-blue-accent-3">{{ username }}</h3>
+  <v-form class="text-center d-flex flex-column align-center ga-5" @submit.prevent="submitForm">
+    <v-text-field
+        v-model="form.username"
+        label="ПІБ"
+        variant="outlined"
+        type="text"
+        class="w-75"
+        :error-messages="errors.usernameErrors ? ['Вкажіть коректно ПІБ']: []"
+        :error="errors.usernameErrors"
+    />
     <v-select
         :items="roles"
         item-title="name"
@@ -57,18 +87,9 @@ export default {
     <v-btn
         color="primary"
         class="w-50 mt-4"
-        :disabled="!isRoleChanged"
-        @click="this.$store.dispatch('updateData', {
-          serverUrl: this.$serverUrl,
-          path: 'users',
-          body: {
-            userId: id,
-            roleId: localRole
-          },
-          action: 'setUsers'
-        })"
+        type="submit"
     >
       Зберегти
     </v-btn>
-  </v-col>
+  </v-form>
 </template>

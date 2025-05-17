@@ -45,6 +45,11 @@ export default {
           action: 'setAppointments'
         })
       }
+    },
+    '$store.state.activeTab.id': function (newId, oldId) {
+      if (oldId === 4) {
+        this.$store.commit("clearPatient")
+      }
     }
   }
 };

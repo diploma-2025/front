@@ -9,7 +9,14 @@ export default {
     },
     plusButton: String,
     editButton: String,
+    infoButton: String,
     deleteButton: String
+  },
+  methods: {
+    selectPatient(patientId) {
+      this.$store.commit("setPatientId", patientId)
+      this.$store.commit("setActiveTab", {id: 4});
+    }
   },
   data() {
     return {
@@ -17,6 +24,11 @@ export default {
     };
   },
   computed: {
+    activeTab: {
+      get() {
+        return this.$store.getters.getActiveTab;
+      }
+    },
     filteredData() {
       if (!this.search) return this.data
       const searchLower = this.search.toLowerCase()
@@ -63,6 +75,14 @@ export default {
   >
     <template v-slot:[`item.actions`]="{ item }">
       <v-col>
+        <v-btn
+            v-if="activeTab?.id === 3"
+            icon
+            elevation="0"
+            @click="selectPatient(item.id)"
+        >
+          <v-icon>mdi-account-box</v-icon>
+        </v-btn>
         <v-btn icon elevation="0"
                @click="this.$store.commit('setPopup', {
                  isOpen: true,

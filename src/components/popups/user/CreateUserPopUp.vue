@@ -20,6 +20,7 @@ export default {
   },
   methods: {
     submitForm() {
+      console.log(this.user)
       this.errors.emailErrors = !this.form.email
       this.errors.usernameErrors = !this.form.username
           || fullNameValidator(this.form.username)
@@ -28,7 +29,7 @@ export default {
       if (!this.errors.emailErrors && !this.errors.usernameErrors && !this.errors.roleErrors)
         this.$store.dispatch('createData', {
           serverUrl: this.$serverUrl,
-          path: 'users',
+          path: this.user.role === 1 ? 'users' : 'users/nurse',
           body: {
             email: this.form.email,
             username: this.form.username,
@@ -43,6 +44,9 @@ export default {
       get() {
         return this.$store.getters.getRoles
       }
+    },
+    user() {
+      return this.$store.getters.getUser
     }
   },
   mounted() {

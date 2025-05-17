@@ -15,6 +15,11 @@ export default {
       const currentDate = new Date(this.$store.getters.getScheduleDate)
       currentDate.setDate(currentDate.getDate() + (direction === 'left' ? -1 : 1))
       this.$store.commit('setDate', currentDate)
+    },
+    selectPatient(event, e) {
+      e.stopPropagation()
+      this.$store.commit("setPatientId", event?.patientId)
+      this.$store.commit("setActiveTab", {id: 4});
     }
   },
   computed: {
@@ -50,6 +55,7 @@ export default {
           start: startDate,
           end: endDate,
           title: appointment.patient.username,
+          patientId: appointment.patient.id,
           class: `time-${hour}`
         };
       })
@@ -98,6 +104,7 @@ export default {
       time-format="HH:mm"
       :events="appointment"
       :time-step="30"
+      @event-dblclick="selectPatient"
   />
 </template>
 
